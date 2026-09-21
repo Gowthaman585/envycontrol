@@ -304,6 +304,14 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
             logging.error("An error ocurred while enabling service")
 
         cleanup()
+        try:
+            with open('/sys/bus/pci/rescan', 'w') as f:
+                f.write('1\n')
+            logging.info("Triggered PCI bus rescan successfully.")
+        except Exception as e:
+            logging.warning(f"Could not rescan PCI bus: {e}")
+        # ----------------------------------------
+
         # get the Nvidia dGPU PCI bus
         nvidia_gpu_pci_bus = get_nvidia_gpu_pci_bus()
 
